@@ -1,0 +1,7 @@
+<h1>Carteira</h1>
+
+{% for acao in object_list %}
+
+<li>{{acao.mes_carteira}} - {{acao.papel}} - {{acao.preco_medio}} - {{acao.dolarizado}}</li>
+
+{% endfor %}
