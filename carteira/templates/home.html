@@ -1,7 +1,41 @@
 <h1>Carteira</h1>
 
-{% for acao in object_list %}
+{{ api }}
 
-<li>{{acao.mes_carteira}} - {{acao.papel}} - {{acao.preco_medio}} - {{acao.dolarizado}}</li>
+<table border=1>
+  <tr>
+    <td>Mês</td>
+    <td>Papel</td>
+    <td>Preço Médio</td>
+    <td>Quantidade</td>
+    <td>Cotação Atual</td>
+    <td>Mercado Interno</td>
+    <td>Lucro</td>
+  </tr>
+{% for acao in object_list %}
+<tr>
+  <td>{{acao.mes_carteira}} </td>
+  <td>{{acao.papel}} </td>
+  <td>{{acao.preco_medio}} </td>
+  <td>{{acao.quantidade}}</td>
+  <td>{% widthratio acao.preco_medio acao.quantidade%}</td>
+  <td>{{acao.dolarizado}} </td>
+  <td>R$ --,-- </td>
+</tr>
 
 {% endfor %}
+</table>
+<hr>
+<span id="total"> Total: {{ valor_acao }}</span>
+<br>
+<br>
+<br>
+<hr>
+<p> Valor a pagar de Imposto de renda nacional:</p>
+<br>
+<br>
+<hr>
+<p> Valor a pagar de Imposto de renda extrangeiro:</p>
+<br>
+<br>
+<hr>
