@@ -2,35 +2,34 @@
 <html lang="pt-br" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Aee</title>
+    <title>Saimon Ribeiro</title>
   </head>
   <body>
-    {{ title }}
-    <table border=1>
-      <tr>
-        <td>Mês</td>
-        <td>Papel</td>
-        <td>Preço Médio</td>
-        <td>Quantidade</td>
-        <td>Cotação Atual</td>
-        <td>Mercado Interno</td>
-        <td>Lucro</td>
-      </tr>
+    <div>
+      <table border=1>
+        <tr>
+          <td>Papel</td>
+          <td>Preço Médio</td>
+          <td>Quantidade</td>
+          <td>Cotação Atual</td>
+          <td>Mercado Interno</td>
+          <td>Lucro</td>
+        </tr>
 
-    {% for acao in queryset %}
+      {% for acao in queryset %}
+        <tr>
+          <td>{{acao.papel}}</td>
+          <td>{{acao.preco_medio}}</td>
+          <td>{{acao.quantidade}}</td>
+          <td>{{acao.cotacao_atual}}</td>
+          <td>{{acao.dolarizado}}</td>
+          <td>{{acao.lucro}}</td>
+        </tr>
+      {% endfor %}
+    <div>
+    </br>
 
-      <tr>
-        <td>{{acao.mes_carteira}} </td>
-        <td>{{acao.papel}} </td>
-        <td>{{acao.preco_medio}} </td>
-        <td>{{acao.quantidade}}</td>
-        <td>0</td>
-        <td>{{acao.dolarizado}} </td>
-        <td>{{acao.lucro}}</td>
-      </tr>
 
-
-    {% endfor %}
-
+    <p> Total Carteira: {{total_carteira}} </p>
   </body>
 </html>
