@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Aee</title>
+  </head>
+  <body>
+    {{ title }}
+    <table border=1>
+      <tr>
+        <td>Mês</td>
+        <td>Papel</td>
+        <td>Preço Médio</td>
+        <td>Quantidade</td>
+        <td>Cotação Atual</td>
+        <td>Mercado Interno</td>
+        <td>Lucro</td>
+      </tr>
+
+    {% for acao in queryset %}
+
+      <tr>
+        <td>{{acao.mes_carteira}} </td>
+        <td>{{acao.papel}} </td>
+        <td>{{acao.preco_medio}} </td>
+        <td>{{acao.quantidade}}</td>
+        <td>0</td>
+        <td>{{acao.dolarizado}} </td>
+        <td>{{acao.lucro}}</td>
+      </tr>
+
+
+    {% endfor %}
+
+  </body>
+</html>
