@@ -44,21 +44,18 @@ def tratamento(lista_de_acao):
                 preco_acao = 1
             else:
                 preco_acao = scraping_exterior(acao)
+                if preco_acao == 0:
+                    preco_acao = 22.72
         lucro = (float(acao.quantidade)*float(preco_acao) - (float(acao.quantidade) * float(acao.preco_medio)))
-        dicionario_retorno = {
-            'mes_carteira':acao.mes_carteira,
-            'papel':acao.papel,
-            'quantidade':acao.quantidade,
-            'cotacao_atual':f'{float(preco_acao):.2f}',
-            'preco_medio':f'{acao.preco_medio:.2f}',
-            'dolarizado': acao.dolarizado,
-            'lucro':f'{lucro:.2f}'
-        }
+        if acao.dolarizado == True:
+            dicionario_retorno = tratamento_dicionario('$', acao.mes_carteira, acao.papel, acao.quantidade, preco_acao, acao.preco_medio, acao.dolarizado, lucro)
+        if acao.dolarizado == False:
+            dicionario_retorno = tratamento_dicionario('R$', acao.mes_carteira, acao.papel, acao.quantidade, preco_acao, acao.preco_medio, acao.dolarizado, lucro)
         if dicionario_retorno['dolarizado'] == True:
             dolar = get_dolar_price()
-            lucro_da_carteira += float(dicionario_retorno['lucro'])*dolar
+            lucro_da_carteira += float(dicionario_retorno['lucro'][2:])*dolar
         else:
-            lucro_da_carteira += float(dicionario_retorno['lucro'])
+            lucro_da_carteira += float(dicionario_retorno['lucro'][3:])
         lista.append(dicionario_retorno)
     return lista, lucro_da_carteira
 
@@ -96,3 +93,14 @@ def get_dolar_price():
     endpoint  = 'https://economia.awesomeapi.com.br/json/all/USD-BRL'
     resposta = requests.request('GET', endpoint)
     return float(resposta.json()['USD']['ask'])
+
+def tratamento_dicionario(moeda, mes_carteira, papel, quantidade, cotacao_atual, preco_medio, dolarizado, lucro):
+    return {
+        'mes_carteira':mes_carteira,
+        'papel':f' {papel}',
+        'quantidade':quantidade,
+        'cotacao_atual':f' {moeda}{float(cotacao_atual):.2f}',
+        'preco_medio':f' {moeda}{preco_medio:.2f}',
+        'dolarizado': dolarizado,
+        'lucro':f' {moeda}{lucro:.2f}'
+    }
