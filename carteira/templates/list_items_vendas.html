@@ -1,0 +1,20 @@
+<table border=1>
+  <tr>
+    <td>Papel</td>
+    <td>Preço Médio</td>
+    <td>Quantidade</td>
+    <td>Cotação Atual</td>
+    <td>Lucro</td>
+  </tr>
+  {% for acao in queryset_vendas %}
+    <tr>
+      <td>{{acao.papel_venda}}</td>
+      <td>{{acao.preco_medio_venda}}</td>
+      <td>{{acao.quantidade_venda}}</td>
+      <td>{{acao.cotacao_atual_venda}}</td>
+      <td>{{acao.lucro_venda}}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+{{queryset_vendas}}

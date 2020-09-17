@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Carteira
+from .models import Carteira, Vendas
 from django.views.generic import TemplateView
 import requests
 import finnhub
 from .key_api import *
-
-
 
 
 def home(request):
@@ -44,8 +42,6 @@ def tratamento(lista_de_acao):
                 preco_acao = 1
             else:
                 preco_acao = scraping_exterior(acao)
-                if preco_acao == 0:
-                    preco_acao = 22.72
         lucro = (float(acao.quantidade)*float(preco_acao) - (float(acao.quantidade) * float(acao.preco_medio)))
         if acao.dolarizado == True:
             dicionario_retorno = tratamento_dicionario('$', acao.mes_carteira, acao.papel, acao.quantidade, preco_acao, acao.preco_medio, acao.dolarizado, lucro)
@@ -70,7 +66,7 @@ def scraping_exterior(acao):
         r = requests.get(f'https://finnhub.io/api/v1/quote?symbol={acao}&token={KEY_API}')
         return float(r.json()['c'])
     except:
-        return 22.72
+        return 23.50
 
 
 def soma_da_carteira(queryset):
@@ -104,3 +100,11 @@ def tratamento_dicionario(moeda, mes_carteira, papel, quantidade, cotacao_atual,
         'dolarizado': dolarizado,
         'lucro':f' {moeda}{lucro:.2f}'
     }
+
+
+def lista_acao_vendas(request):
+    queryset_vendas = Vendas.objects.all()
+    context = {
+        'queryset_vendas':'dicionario_venda',
+    }
+    return render(request, 'list_items_vendas.html', context)
