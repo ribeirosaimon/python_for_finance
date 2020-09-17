@@ -20,23 +20,31 @@ def home(request):
 def lista_acao(request):
     queryset = Carteira.objects.all()
     total_carteira = soma_da_carteira(queryset)
-    queryset = tratamento(queryset)
+    queryset, lucro_da_carteira = tratamento(queryset)
     context = {
         'queryset':queryset,
         'total_carteira':total_carteira,
         'dolar':get_dolar_price(),
+        'lucro_da_carteira':f'{lucro_da_carteira:.2f}',
     }
     return render(request, 'list_items.html', context)
 
 def tratamento(lista_de_acao):
     lista = []
-
+    lucro_da_carteira = float(0)
     for acao in lista_de_acao:
         preco_acao = 0
         if acao.dolarizado == False:
-            preco_acao = scraping(acao)
+            if acao.papel == 'caixa':
+                preco_acao = 1
+            else:
+                preco_acao = scraping(acao)
         if acao.dolarizado == True:
-            preco_acao = scraping_exterior(acao)
+            if acao.papel == 'caixa':
+                preco_acao = 1
+            else:
+                preco_acao = scraping_exterior(acao)
+        lucro = (float(acao.quantidade)*float(preco_acao) - (float(acao.quantidade) * float(acao.preco_medio)))
         dicionario_retorno = {
             'mes_carteira':acao.mes_carteira,
             'papel':acao.papel,
@@ -44,10 +52,15 @@ def tratamento(lista_de_acao):
             'cotacao_atual':f'{float(preco_acao):.2f}',
             'preco_medio':f'{acao.preco_medio:.2f}',
             'dolarizado': acao.dolarizado,
-            'lucro':f'{(float(acao.quantidade)*float(preco_acao) - (float(acao.quantidade) * float(acao.preco_medio))):.2f}'
+            'lucro':f'{lucro:.2f}'
         }
+        if dicionario_retorno['dolarizado'] == True:
+            dolar = get_dolar_price()
+            lucro_da_carteira += float(dicionario_retorno['lucro'])*dolar
+        else:
+            lucro_da_carteira += float(dicionario_retorno['lucro'])
         lista.append(dicionario_retorno)
-    return lista
+    return lista, lucro_da_carteira
 
 def scraping(acao):
     endpoint  = f'https://secure-wildwood-34847.herokuapp.com/{acao}'
@@ -67,10 +80,16 @@ def soma_da_carteira(queryset):
     total_carteira = float(0)
     dolar = get_dolar_price()
     for acao in queryset:
-        if acao.dolarizado == True:
-            total_carteira += float(acao.quantidade)*float(scraping_exterior(acao))* dolar
+        if acao.papel == 'caixa':
+            if acao.dolarizado == False:
+                total_carteira += float(acao.quantidade)*float(acao.preco_medio)
+            else:
+                total_carteira += (float(acao.quantidade)*float(acao.preco_medio))* dolar
         else:
-            total_carteira += float(acao.quantidade)*float(scraping(acao))
+            if acao.dolarizado == True:
+                total_carteira += float(acao.quantidade)*float(scraping_exterior(acao))* dolar
+            else:
+                total_carteira += float(acao.quantidade)*float(scraping(acao))
     return total_carteira
 
 def get_dolar_price():
