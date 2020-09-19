@@ -56,7 +56,7 @@ def tratamento(lista_de_acao):
     return lista, lucro_da_carteira
 
 def scraping(acao):
-    endpoint  = f'https://secure-wildwood-34847.herokuapp.com/{acao}'
+    endpoint  = f'https://secure-wildwood-34847.herokuapp.com/br/{acao}'
     resposta = requests.request('GET', endpoint)
     resposta_da_acao = resposta.json()
     return float(resposta_da_acao[f'{acao}']['fundamentalist_analysis']['adj_close'])
