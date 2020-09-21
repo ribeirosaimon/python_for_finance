@@ -62,11 +62,10 @@ def scraping(acao):
     return float(resposta_da_acao[f'{acao}']['fundamentalist_analysis']['adj_close'])
 
 def scraping_exterior(acao):
-    try:
-        r = requests.get(f'https://finnhub.io/api/v1/quote?symbol={acao}&token={KEY_API}')
-        return float(r.json()['c'])
-    except:
-        return 23.50
+    endpoint  = f'https://secure-wildwood-34847.herokuapp.com/usa/{acao}'
+    resposta = requests.request('GET', endpoint)
+    resposta_da_acao = resposta.json()
+    return float(resposta_da_acao[f'{acao}']['fundamentalist_analysis']['adj_close'])
 
 
 def soma_da_carteira(queryset):
