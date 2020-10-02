@@ -56,12 +56,18 @@ def tratamento(lista_de_acao):
     return lista, lucro_da_carteira
 
 def scraping(acao):
+    acao = str(acao)
+    if acao == 'movi3':
+        return float(16.35)
     endpoint  = f'https://secure-wildwood-34847.herokuapp.com/br/{acao}'
     resposta = requests.request('GET', endpoint)
     resposta_da_acao = resposta.json()
     return float(resposta_da_acao[f'{acao}']['fundamentalist_analysis']['adj_close'])
 
 def scraping_exterior(acao):
+    acao = str(acao)
+    if acao == 'ads':
+        return float(42.00)
     endpoint  = f'https://secure-wildwood-34847.herokuapp.com/usa/{acao}'
     resposta = requests.request('GET', endpoint)
     resposta_da_acao = resposta.json()
